@@ -15,6 +15,11 @@ public class Queue
         this.end = null;
     }
 
+    public boolean isEmpty()
+    {
+        return this.front == null;
+    }
+
     //Polymorphism
     private void enqueue(Node n)
     {
