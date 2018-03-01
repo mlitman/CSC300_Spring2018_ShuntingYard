@@ -31,6 +31,6 @@ public class OpStack
 
     public void push()
     {
-        //this is the logic for whether you can add a OpNode to the stack
+        //this is the logic for whether you can add a OpNode to the stack?
     }
 }
