@@ -32,10 +32,21 @@ public class Queue
             this.end.setNextNode(n);
             this.end = n;
         }
+
         if(this.front == null)
         {
             this.front = this.end;
         }
+    }
+
+    public void enqueue(OpNode op)
+    {
+        this.enqueue((Node)op);
+    }
+
+    public void enqueue(NumNode op)
+    {
+        this.enqueue((Node)op);
     }
 
     public void enqueue(char payload)

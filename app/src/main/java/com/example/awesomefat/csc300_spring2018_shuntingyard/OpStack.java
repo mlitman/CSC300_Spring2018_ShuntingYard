@@ -29,8 +29,33 @@ public class OpStack
         return currTop;
     }
 
-    public void push()
+    public void clearOpStack(Queue outputQ)
+    {
+        while(this.top != null)
+        {
+            outputQ.enqueue(this.pop());
+        }
+    }
+
+    public void push(OpNode op, Queue outputQ)
     {
         //this is the logic for whether you can add a OpNode to the stack
+
+        //clear the stack until it is a legal move
+        while(this.peek() != null && this.peek().getPriority() >= op.getPriority())
+        {
+            outputQ.enqueue(this.pop());
+        }
+
+        //push op onto top of stack
+        if(this.top == null)
+        {
+            this.top = op;
+        }
+        else
+        {
+            op.setNextNode(this.top);
+            this.top = op;
+        }
     }
 }
