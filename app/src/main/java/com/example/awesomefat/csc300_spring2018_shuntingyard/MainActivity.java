@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.EditText;
 
+import java.util.Stack;
 import java.util.StringTokenizer;
 
 public class MainActivity extends AppCompatActivity
@@ -116,9 +117,82 @@ public class MainActivity extends AppCompatActivity
         this.opStack.clearOpStack(this.outputQ);
     }
 
+    private int doMath(int num1, int num2, char op)
+    {
+        if(op == '+')
+        {
+            return num1 + num2;
+        }
+        else if(op == '-')
+        {
+            return num1 - num2;
+        }
+        else if(op == '*')
+        {
+            return num1 * num2;
+        }
+        else
+        {
+            return num1 / num2;
+        }
+    }
+
+    private void processOutputQueue2()
+    {
+        Stack<NumNode> solutionStack = new Stack<NumNode>();
+        Node temp;
+
+        while(!this.outputQ.isEmpty())
+        {
+            temp = this.outputQ.dequeue();
+            int num1;
+            int num2;
+            int answer;
+            if(temp instanceof OpNode)
+            {
+                //doMath
+                num2 = solutionStack.pop().getPayload();
+                num1 = solutionStack.pop().getPayload();
+                answer = doMath(num1, num2, ((OpNode) temp).getPayload());
+                solutionStack.push(new NumNode(answer));
+            }
+            else
+            {
+                solutionStack.push((NumNode)temp);
+            }
+        }
+        System.out.println("Final Answer: " + solutionStack.pop().getPayload());
+    }
+
     private void processOutputQueue()
     {
         //ultimately show the answer on the screen
+        Node temp;
+        int num1 = 0;
+        int num2 = 0;
+        boolean fillNum1 = true;
+
+        while(!this.outputQ.isEmpty())
+        {
+            temp = this.outputQ.dequeue();
+            if(temp instanceof OpNode)
+            {
+                num1 = this.doMath(num1, num2, ((OpNode)temp).getPayload());
+            }
+            else
+            {
+                if(fillNum1)
+                {
+                    num1 = ((NumNode)temp).getPayload();
+                    fillNum1 = false;
+                }
+                else
+                {
+                    num2 = ((NumNode)temp).getPayload();
+                }
+            }
+        }
+        System.out.println("Final Answer: " + num1);
     }
     public void onClickMeButtonPressed(View v)
     {
@@ -126,6 +200,7 @@ public class MainActivity extends AppCompatActivity
         String valueWithoutSpaces = this.removeSpaces(inputET.getText().toString());
         this.fillInputQ(inputET.getText().toString());
         this.processInputQ();
-        this.testQ(this.outputQ);
+        this.processOutputQueue2();
+        //this.testQ(this.outputQ);
     }
 }
